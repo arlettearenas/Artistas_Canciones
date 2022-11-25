@@ -18,45 +18,38 @@ import java.io.PrintWriter;
  * @author arlet
  */
 public class Spotify {
-    public static void mostrarArtista(String artista) {
-        
-    }
-    public static void leerArchivo(String name) {
-    File archivo = null; //Apunta a un archivo fisico del dd
-    FileReader fr = null;
-    BufferedReader bufer = null;
-    try {
-        //creamos un apuntador al archivo físico
-        archivo = new File("C:\\" + name + ".txt");
-        //abrimos el archivo para lectura
-        fr = new FileReader(archivo);
-        //configurar bufer para hacer la lectura
-        bufer = new BufferedReader(fr);
-        
-        
-        //Lectura del contenido del archivo
-        String linea;
-        //mientras haya información en el archivo
-        while ((linea = bufer.readLine()) != null)
-            System.out.println("Línea del archivo: " + linea);
-            
-    } catch(Exception e){
-        System.out.println("Error: No se encuentra el archivo");
-        e.printStackTrace();
-    }finally {
-        //Esta cláusula se ejecuta siempre
-        //Se cierra el archivo
-        try {
-            //si se logró abrir el archivo, debemos cerrarlo
-            if(null != fr){
-                fr.close();
-            }
-        } catch(Exception e2){
-            System.out.println("Error al cerrar el archivo");
+    public static void Artistas (String name) {
+    File archivo = null;
+      FileReader fr = null;
+      BufferedReader br = null;
+
+      try {
+         // Apertura del fichero y creacion de BufferedReader para poder
+         // hacer una lectura comoda (disponer del metodo readLine()).
+         archivo = new File ("C:\\Spotify\\artistas.txt");
+         fr = new FileReader (archivo);
+         br = new BufferedReader(fr);
+
+         // Lectura del fichero
+         String linea;
+         while((linea=br.readLine())!=null)
+            System.out.println(linea);
+      }
+      catch(Exception e){
+         e.printStackTrace();
+      }finally{
+         // En el finally cerramos el fichero, para asegurarnos
+         // que se cierra tanto si todo va bien como si salta 
+         // una excepcion.
+         try{                    
+            if( null != fr ){   
+               fr.close();     
+            }                  
+         }catch (Exception e2){ 
             e2.printStackTrace();
-        }
-    }
-    }
+         }
+      }
+   }
     public static void InsertarArtista (String name) {
         FileWriter archivo = null;
         PrintWriter pw = null;
@@ -90,13 +83,22 @@ public class Spotify {
             }
         }
     }
-
-    public static void main(String[] args) throws IOException {
+    public static void eliminarArtista (String name) {
+        File archivo = new File("C:\\" + name + ".txt"); 
+    if (archivo.delete()) { 
+      System.out.println("El artista: " + archivo.getName() + " ha sido eliminado con éxito");
+    } else {
+      System.out.println("Algo salió mal al eliminar este artista, intenta más tarde");
+    } 
+  } 
+    
+    public static void main (String[] args) throws IOException {
         BufferedReader buferTeclado = new BufferedReader(new InputStreamReader(System.in));
         String entrada;
         String fileName;
         int opcion;
         
+        System.out.println("SPOTIFY");
         System.out.println("Buenas tardes!");
         System.out.println("--------------------------------------");
         System.out.println("1 - Ver artistas");
@@ -109,16 +111,14 @@ public class Spotify {
         System.out.println("¿Qué quieres hacer? ");
         entrada = buferTeclado.readLine();
         opcion = Integer.parseInt(entrada);
-        System.out.println("Escribe el nombre del archivo");
         entrada = buferTeclado.readLine();
         fileName = entrada;
-        
+   
         switch(opcion){
             case 1: {
                 //Leer de un archivo de texto
-                System.out.println("Lectura de un archivo existente");
-                System.out.println("Contenido del archivo: ");
-                leerArchivo(entrada);
+                System.out.println("Estos son los artistas que te gustan: ");
+                Artistas(fileName);
             }
             break;
             case 2: {
@@ -126,16 +126,15 @@ public class Spotify {
                 InsertarArtista(fileName);
             }
             break;
-            default: System.out.println("Opción no válida");
-            
+        case 3: {
+                eliminarArtista(fileName);      
         }
         
+}
         
-        
-        
-        
+}    
+       
          
     }
     
-}
 
